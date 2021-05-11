@@ -17,7 +17,7 @@ services:
   ui:
     build: 
       context: ./ui
-    image: image_enhancement_ui
+    image: imageenhancement_ui
     container_name: imageenhancement_ui
     restart: always
     # expose:
