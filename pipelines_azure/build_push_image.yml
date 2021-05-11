@@ -1,0 +1,51 @@
+name: 1.0$(Date:MMdd)$(Rev:.r)
+trigger:
+  branches:
+    include:
+    - '*'
+  paths:
+    include:
+    - dashboard/
+
+variables:
+- template: arm-templates/variables-template.yml
+- name: azureContainerRegistry
+  value: $[format('{0}{1}', lower(variables.BASE_NAME), 'cr.azurecr.io')]
+
+stages:
+- stage: Build
+  jobs:
+  - job: Build
+    
+    pool:
+      vmImage: 'ubuntu-latest'
+      
+    steps:
+    - task: DockerCompose@0
+      displayName: Build services
+      inputs:
+        action: Build services
+        containerregistrytype: Azure Container Registry
+        azureSubscriptionEndpoint: '$(AZURE_RM_SVC_CONNECTION)'
+        azureContainerRegistry: $(azureContainerRegistry)
+        dockerComposeFile: dashboard/docker-compose.yml
+        dockerComposeFileArgs: |
+          buildid=$(Build.BuildId)
+        projectName: $(Build.Repository.Name)
+        qualifyImageNames: true
+        additionalImageTags: $(Build.BuildId)
+        # arguments: "--no-cache"
+
+    - task: DockerCompose@0
+      displayName: Push services
+      inputs:
+        action: Push services
+        containerregistrytype: Azure Container Registry
+        azureSubscriptionEndpoint: '$(AZURE_RM_SVC_CONNECTION)'
+        azureContainerRegistry: $(azureContainerRegistry)
+        dockerComposeFile: dashboard/docker-compose.yml
+        projectName: $(Build.Repository.Name)
+        qualifyImageNames: true
+        additionalImageTags: $(Build.BuildId)
+
+        

@@ -1,0 +1,9 @@
+.DS_Store
+.vscode
+.Rproj.user
+.Rhistory
+test_app.R
+dashboard/api/app/output/*
+output/*
+dashboard/ui/app/www/img/output/*
+

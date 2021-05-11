@@ -1,0 +1,27 @@
+trigger:
+  branches:
+    include:
+    - master
+  paths:
+    include:
+    - pipelines_azure/arm-templates/*
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+- template: arm-templates/variables-template.yml
+
+
+steps:
+- task: AzureResourceGroupDeployment@2
+  inputs:
+    azureSubscription: '$(AZURE_RM_SVC_CONNECTION)'
+    action: 'Create Or Update Resource Group'
+    resourceGroupName: '$(RESOURCE_GROUP)'
+    location: $(LOCATION)
+    templateLocation: 'Linked artifact'
+    csmFile: '$(Build.SourcesDirectory)/pipelines_azure/arm-templates/cloud-environment.json'
+    overrideParameters: '-baseName $(BASE_NAME) -location $(LOCATION) -webAppName $(WEB_APP_NAME) -servicePlanPricingTier $(WEB_APP_TIER)'
+    deploymentMode: 'Incremental'
+  displayName: 'Deploy DevOps resources to Azure'

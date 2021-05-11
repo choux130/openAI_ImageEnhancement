@@ -1,0 +1,17 @@
+pr: none
+trigger: none
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+variables:
+- template: arm-templates/variables-template.yml
+
+steps:
+- task: AzureResourceGroupDeployment@2
+  inputs:
+    azureSubscription: '$(AZURE_RM_SVC_CONNECTION)'
+    action: 'DeleteRG'
+    resourceGroupName: '$(RESOURCE_GROUP)'
+    location: $(LOCATION)
+  displayName: 'Delete resources in Azure'

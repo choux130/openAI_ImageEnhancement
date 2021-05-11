@@ -1,0 +1,30 @@
+version: "3"
+
+services:
+  api:
+    build: 
+      context: ./api
+    image: imageenhancement_api
+    container_name: imageenhancement_api
+    restart: always
+    expose:
+      - 8050
+    # ports:
+    #   - "8050:8050"
+    volumes:
+        - ./output:/api/app/output
+
+  ui:
+    build: 
+      context: ./ui
+    image: image_enhancement_ui
+    container_name: image_enhancement_ui
+    restart: always
+    # expose:
+    #   - 3838
+    ports:
+      - "3838:3838"
+    depends_on: 
+      - api
+    volumes:
+      - ./output:/app/www/img/output

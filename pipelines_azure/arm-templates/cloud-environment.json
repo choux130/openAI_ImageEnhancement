@@ -1,0 +1,133 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "baseName": {
+        "type": "string",
+        "maxLength": 30,
+        "minLength": 3,
+        "metadata": {
+          "description": "The base name to use as prefix to create all the resources."
+        }
+      },
+      "location": {
+        "type": "string",
+        "defaultValue": "eastus",
+        "allowedValues": [
+          "eastus",
+          "eastus2",
+          "southcentralus",
+          "southeastasia",
+          "westcentralus",
+          "westeurope",
+          "westus2",
+          "centralus"
+        ],
+        "metadata": {
+          "description": "Specifies the location for all resources."
+        }
+      },
+      "acr": {
+        "type": "string",
+        "defaultValue": "[concat(toLower(parameters('baseName')),'acr')]"
+      },
+      "webAppName": {
+        "type": "string",
+        "defaultValue": "[toLower(parameters('webAppName'))]",
+        "metadata": {
+          "description": "Specifies the web app name for this resources"
+        }
+      }, 
+      "servicePlanPricingTier": {
+        "type": "string",
+        "allowedValues": [
+            "F1",
+            "B1",
+            "B2",
+            "B3",
+            "S1",
+            "S2",
+            "S3",
+            "P1V2",
+            "P2V2",
+            "P2V3",
+            "P3V2",
+            "P1V3",
+            "P3V3"            
+        ],
+        "defaultValue": "F1",
+        "metadata": {
+            "description": "App Service Plan Pricing Tier"
+        }
+      }      
+    },
+    "variables": {
+      "containerRegistryName": "[parameters('acr')]",
+      "servicePlanName": "[concat(parameters('webAppName'), '-asp')]",
+      "servicePlanPricingTiers": {
+            "F1": { "tier": "Free" },
+            "B1": { "tier": "Basic" },
+            "B2": { "tier": "Basic" },
+            "B3": { "tier": "Basic" },
+            "S1": { "tier": "Standard" },
+            "S2": { "tier": "Standard" },
+            "S3": { "tier": "Standard" },
+            "P1V2": { "tier": "Premium" },
+            "P2V2": { "tier": "Premium" },
+            "P2V3": { "tier": "Premium" },
+            "P3V2": { "tier": "Premium" },
+            "P1V3": { "tier": "Premium" },
+            "P3V3": { "tier": "Premium" }
+        }
+    },
+    "resources": [
+      {
+        "type": "Microsoft.ContainerRegistry/registries",
+        "apiVersion": "2017-10-01",
+        "name": "[variables('containerRegistryName')]",
+        "location": "[parameters('location')]",
+        "sku": {
+          "name": "Standard"
+        },
+        "properties": {
+          "adminUserEnabled": true
+        }
+      },
+      {
+        "type": "Microsoft.Web/sites",
+        "apiVersion": "2020-06-01",
+        "name": "[parameters('webAppName')]",
+        "location": "[parameters('location')]",
+        "dependsOn": [
+            "[variables('servicePlanName')]"
+        ],
+        "tags": {},
+        "properties": {
+            "name": "[parameters('webAppName')]",
+            "siteConfig": {
+                "linuxFxVersion": "COMPOSE|bnVsbA=="
+            },
+            "serverFarmId": "[variables('servicePlanName')]"
+        }
+      },
+      {
+        "type": "Microsoft.Web/serverfarms",
+        "apiVersion": "2020-06-01",
+        "name": "[variables('servicePlanName')]",
+        "location": "[parameters('location')]",
+        "dependsOn": [],
+        "tags": {},
+        "kind": "linux",
+        "properties": {
+            "name": "[variables('servicePlanName')]",
+            "workerSizeId": "1",
+            "reserved": true,
+            "numberOfWorkers": "1"
+        },
+        "sku": {
+            "name": "[parameters('servicePlanPricingTier')]",
+            "tier": "[variables('servicePlanPricingTiers')[parameters('servicePlanPricingTier')].tier]"
+        }
+      }
+    ]
+}

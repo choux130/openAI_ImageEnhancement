@@ -1,0 +1,113 @@
+div#comparison { 
+  width: 60vw;
+  height: 60vw;
+  max-width: 2000px;
+  max-height: 2000px;
+  overflow: hidden; 
+}
+div#comparison figure { 
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  background-size: cover;
+  position: relative;
+  font-size: 0;
+  width: 100%; 
+  height: 100%;
+  margin: 0; 
+}
+div#comparison figure > img { 
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  position: relative;
+  width: 100%;
+  border-width: thick;
+}
+div#comparison figure div { 
+  background-size: cover;
+  position: absolute;
+  width: 50%; 
+  box-shadow: 0 5px 10px -2px rgba(0,0,0,0.3);
+  overflow: hidden;
+  bottom: 0;
+  height: 100%;
+  border-width: thick;
+}
+
+input[type=range]{
+  -webkit-appearance:none;
+  -moz-appearance:none;
+  position: relative;
+  top: -2rem; left: -2%;
+  background-color: rgba(255,255,255,0.1);
+  width: 102%; 
+}
+input[type=range]:focus { 
+  outline: none; 
+}
+input[type=range]:active { 
+  outline: none;  
+}
+
+input[type=range]::-moz-range-track { 
+  -moz-appearance:none;
+  height:15px;
+  width: 98%;
+  background-color: rgba(255,255,255,0.1); 
+  position: relative;
+  outline: none;    
+}
+input[type=range]::active { 
+  border: none; 
+  outline: none;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance:none;
+  width: 20px; height: 150px;   
+  background: #fff;
+  border-radius: 0;
+}
+input[type=range]::-moz-range-thumb {
+  -moz-appearance: none;
+  width: 20px;
+  height: 15px;
+  background: #fff;
+  border-radius: 0;
+}   
+input[type=range]:focus::-webkit-slider-thumb {
+  background: rgba(255,255,255,0.5);
+}
+input[type=range]:focus::-moz-range-thumb {
+  background: rgba(255,255,255,0.5);
+}
+
+.compare_text {
+  font-weight:bold;
+  font-size:xx-large;
+  color:#ff5e00;
+}
+
+* {box-sizing: border-box;}
+
+.img-zoom-container {
+  position: relative;
+}
+
+.img-zoom-lens {
+  position: absolute;
+  border: 1px solid #d4d4d4;
+  /*set the size of the lens:*/
+  width: 50px;
+  height: 50px;
+}
+
+.img-zoom-result {
+  border: 1px solid #d4d4d4;
+  /*set the size of the result div:*/
+  width: 300px;
+  height: 300px;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
