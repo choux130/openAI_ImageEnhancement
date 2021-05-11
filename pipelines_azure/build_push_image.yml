@@ -10,7 +10,7 @@ trigger:
 variables:
 - template: arm-templates/variables-template.yml
 - name: azureContainerRegistry
-  value: $[format('{0}{1}', lower(variables.BASE_NAME), 'cr.azurecr.io')]
+  value: $[format('{0}{1}', lower(variables.BASE_NAME), 'acr.azurecr.io')]
 
 stages:
 - stage: Build

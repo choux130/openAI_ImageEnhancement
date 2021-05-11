@@ -11,20 +11,20 @@ services:
       - 8050
     # ports:
     #   - "8050:8050"
-    volumes:
-        - ./output:/api/app/output
+    # volumes:
+    #     - ./output:/api/app/output
 
   ui:
     build: 
       context: ./ui
     image: image_enhancement_ui
-    container_name: image_enhancement_ui
+    container_name: imageenhancement_ui
     restart: always
     # expose:
-    #   - 3838
+    #   - 80
     ports:
-      - "3838:3838"
+      - "80:80"
     depends_on: 
       - api
-    volumes:
-      - ./output:/app/www/img/output
+    # volumes:
+    #   - ./output:/app/www/img/output
