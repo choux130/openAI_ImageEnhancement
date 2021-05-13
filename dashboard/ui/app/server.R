@@ -25,30 +25,66 @@ shinyServer(function(input, output, session) {
         }
     })
 
+    observe({
+        if (input$radio_input_selection != "example" & is.null(input$myFile)){
+            shinyjs::hide(id = "zoom_1")
+            shinyjs::hide(id = "zoom_2")
+            shinyjs::hide(id = "zoom_3")
+        } else {
+            shinyjs::show(id = "zoom_1")
+            shinyjs::show(id = "zoom_2")
+            shinyjs::show(id = "zoom_3")
+        }
+    })
+    
+    
     observeEvent(input$myFile, {
         inFile <- input$myFile
         if (is.null(inFile))
             return()
     
         showModal(modalDialog("Transforming...", footer = NULL, easyClose = FALSE), session = session)
-        # browser()
         file_path = inFile$datapath
-        file_name = paste0(format(Sys.time(), "%Y%m%d_%H%M%S"), "_", inFile$name)
-        if (docker){
-            url = "http://api:8050/sr_lapsrn_x8"
-        } else {
-            url = "http://127.0.0.1:8050/sr_lapsrn_x8"
-        }
-        out  = run_api(url, file_path, file_name)
-        status_code = out[[1]]
-        dim = out[[2]]
         
-        values$previous_custom_file_name = file_name
-        values$file_name = file_name
-        values$status_code = status_code   
-        
+        # check image dimension
         # browser()
-        removeModal(session = session)
+        img <- tryCatch({
+            readJPEG(file_path) }, error = function(e){
+                readPNG(file_path)
+            }
+        )
+        dim = dim(img)
+        height = dim[1]
+        width = dim[2]
+        
+        if (width > 500 | height > 500){
+            removeModal(session = session)
+            
+            showModal(modalDialog("Sorry! Due to the limited computation resources, currently we only support image less than 500x500.", 
+                                  easyClose = FALSE), 
+                      session = session)
+        } else {
+            file_name = paste0(format(Sys.time(), "%Y%m%d_%H%M%S"), "_", inFile$name)
+            if (docker){
+                url = "http://api:8050/sr_lapsrn_x8"
+            } else {
+                url = "http://127.0.0.1:8050/sr_lapsrn_x8"
+            }
+            out  = run_api(url, file_path, file_name)
+            status_code = out[[1]]
+            dim = out[[2]]
+            
+            values$previous_custom_file_name = file_name
+            values$file_name = file_name
+            values$status_code = status_code   
+            
+            # browser()
+            removeModal(session = session)
+        }
+        
+        
+        
+        
     })
     
     observe({        
@@ -102,7 +138,7 @@ shinyServer(function(input, output, session) {
             shinyjs::js$imageZoom("myimage3", "myresult3")
         }
     })
-    
+
     #### Side-by-side comparison ===========================================
     output$side_by_side_ui = renderUI({
         req(!is.null(values$status_code))
@@ -157,7 +193,7 @@ shinyServer(function(input, output, session) {
             )
         } else {
             removeModal(session = session)
-            HTML("Something wrong, please contact maintainer Ting Chou (yintingchou@gmail.com)")
+            HTML("Something wrong, please contact the maintainer Ting Chou (yintingchou@gmail.com)")
         }
     })
 

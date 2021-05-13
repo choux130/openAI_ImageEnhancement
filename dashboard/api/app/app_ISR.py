@@ -25,11 +25,22 @@ def super_resolution_esrgan():
 
     # Read the image via file.stream
     img = Image.open(file.stream)
-    img.save(folder_path + '/' + 'lr.jpg')
+    array = np.array(img)
+    if array.shape[2] == 4:
+        # rgba           
+        img.load()
+        img2 = Image.new("RGB", img.size, (255, 255, 255))
+        img2.paste(img, mask=img.split()[3]) # 3 is the alpha channel
+    else: 
+        img2 = img
+    img2.save(folder_path + '/' + 'lr.jpg')
 
+    # pdb.set_trace()
     # Inference
-    sr_img = rrdn_gans.predict(np.array(img))
-
+    array = np.array(img2)
+    sr_img = rrdn_gans.predict(array)
+    
+    # pdb.set_trace()
     result_img = Image.fromarray(sr_img)
     result_img.save(folder_path + '/' + 'hr.jpg')
 

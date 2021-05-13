@@ -1,8 +1,3 @@
-# References 
-# https://css-tricks.com/keep-pixelated-images-pixelated-as-they-scale/
-
-
-
 rm(list = ls())
 gc()
 
@@ -11,6 +6,8 @@ suppressMessages(library(dplyr))
 suppressMessages(library(bs4Dash))
 suppressMessages(library(reticulate))
 suppressMessages(library(readbitmap))
+suppressMessages(library(jpeg))
+suppressMessages(library(png))
 
 path_python_files = "python/api_funs.py"
 reticulate::source_python(path_python_files)
@@ -32,15 +29,45 @@ MapExampleToImage = function(example_name){
    return(list(selected = selected, all_selections = list))
 }
 
+# based on the Shiny fileInput function
+fileInput2 <- function(inputId, label = NULL, labelIcon = NULL, multiple = FALSE, 
+                       accept = NULL, width = NULL, progress = TRUE, ...) {
+  # add class fileinput_2 defined in UI to hide the inputTag
+  inputTag <- tags$input(id = inputId, name = inputId, type = "file", 
+                         class = "fileinput_2")
+  if (multiple) 
+    inputTag$attribs$multiple <- "multiple"
+  if (length(accept) > 0) 
+    inputTag$attribs$accept <- paste(accept, collapse = ",")
+  
+  div(..., style = if (!is.null(width)) paste0("width: ", validateCssUnit(width), ";"), 
+      inputTag,
+      # label customized with an action button
+      tags$label(`for` = inputId, div(icon(labelIcon), label, 
+                                      class = "btn btn-default action-button")),
+      # optionally display a progress bar
+      if(progress)
+        tags$div(id = paste(inputId, "_progress", sep = ""), 
+                 class = "progress shiny-file-input-progress", 
+                 tags$div(class = "progress-bar")
+        )
+  )
+}
+
+
+
 js <- HTML('
 $(document).on("shiny:sessioninitialized", function(event) {
    $(\'a[data-value="tab_tryit"]\').tab("show");
-   console.log("init");
+   
+   
 });
            
 function moveDivisor() { 
   divisor.style.width = slider.value+"%";
-}')
+}
+
+')
 
 
 jsCode <- "shinyjs.insertImage = function(params){
@@ -57,8 +84,6 @@ jsCode <- "shinyjs.insertImage = function(params){
 jsCode2 <- 
    '
 shinyjs.imageZoom = function(params) {
-  console.log("got called")
-  
   var imgID = params[0]; 
   var resultID = params[1];
   

@@ -1,20 +1,19 @@
 shinyUI(
     ui = bs4DashPage(
         old_school = FALSE,
-        sidebar_collapsed = TRUE,
-        controlbar_collapsed = FALSE,
+        # sidebar_collapsed = TRUE,
         title = "AI - Image Enhancement",
-        sidebar = bs4DashSidebar(
-            skin = "light",
-            status = "primary",
-            title = "AI - Image Enhancement",
-            brandColor = "primary",
-            elevation = 3,
-            opacity = 0.8,
-            bs4SidebarMenu(
-                bs4SidebarMenuItem("About", tabName = "tab_intro", icon = "book"),
-                bs4SidebarMenuItem("Try it!", tabName = "tab_tryit", icon = "futbol") 
-            )
+        sidebar = bs4DashSidebar(disable = TRUE
+            # skin = "light",
+            # status = "primary",
+            # title = "AI - Image Enhancement",
+            # brandColor = "primary",
+            # elevation = 3,
+            # opacity = 0.8,
+            # bs4SidebarMenu(
+            #     bs4SidebarMenuItem("About", tabName = "tab_intro", icon = "book"),
+            #     bs4SidebarMenuItem("Try it!", tabName = "tab_tryit", icon = "futbol")
+            # )
         ),
         body = bs4DashBody(
             shinyjs::useShinyjs(),
@@ -24,18 +23,18 @@ shinyUI(
             tags$head(tags$link(rel = "stylesheet", 
                                 type = "text/css", 
                                 href = "style.css")), 
-            bs4TabItems(
-                bs4TabItem(
-                    tabName = "tab_intro",
-                    bs4Card(width = 12, closable = FALSE, 
-                            title = "Welcome!", 
-                            status = "primary", 
-                            bordered = TRUE, 
-                            solidHeader = TRUE,
-                            uiOutput("intro"))
-                ),
-                bs4TabItem(
-                    tabName = "tab_tryit",
+            # bs4TabItems(
+            #     bs4TabItem(
+            #         tabName = "tab_intro",
+            #         bs4Card(width = 12, closable = FALSE, 
+            #                 title = "Welcome!", 
+            #                 status = "primary", 
+            #                 bordered = TRUE, 
+            #                 solidHeader = TRUE,
+            #                 uiOutput("intro"))
+            #     ),
+            #     bs4TabItem(
+            #         tabName = "tab_tryit",
                     fluidRow(
                         column(width = 2, 
                         bs4Card(
@@ -66,9 +65,11 @@ shinyUI(
                                ),
                                conditionalPanel(
                                    condition = "input.radio_input_selection == 'custom'",
-                                   fileInput(inputId = "myFile",
-                                             label = "Choose a file:",
-                                             accept = c('image/png', 'image/jpeg')
+                                   fileInput2(inputId = "myFile",
+                                             label = "Choose a image:",
+                                             accept = c('image/png', 'image/jpeg'),
+                                             labelIcon = "file-image-o", 
+                                             progress = TRUE
                                    )
                                ),
                                uiOutput("download_ui")
@@ -93,7 +94,8 @@ shinyUI(
                             maximizable = TRUE,
                             status = "primary",
                             fluidRow(
-                               column(width = 4,
+                                # tags$div(id = "zoom_ui",
+                               column(width = 4, id = "zoom_1",
                                       fluidRow(
                                           tags$div("Original", style = "width: 300px;"),
                                           tags$div(
@@ -108,7 +110,7 @@ shinyUI(
                                           )
                                       )
                                ),
-                               column(width = 4,
+                               column(width = 4, id = "zoom_2",
                                       fluidRow(
                                           tags$div("Browser Scaling", style = "width: 300px;"),
                                           tags$div(
@@ -123,7 +125,7 @@ shinyUI(
                                           )
                                       )
                                ),
-                               column(width = 4,
+                               column(width = 4, id = "zoom_3",
                                       fluidRow(
                                           tags$div("Super Resolution", style = "width: 300px;"),
                                           tags$div(
@@ -138,8 +140,9 @@ shinyUI(
                                       )
                                )
                            )
-                         )
-                    ))
+                          )
+                        # )
+                    # ))
                 )
             )
         )
