@@ -39,22 +39,25 @@ shinyServer(function(input, output, session) {
         } else {
             url = "http://127.0.0.1:8050/sr_lapsrn_x8"
         }
-        status_code  = run_api(url, file_path, file_name)
-    
+        out  = run_api(url, file_path, file_name)
+        status_code = out[[1]]
+        dim = out[[2]]
+        
         values$previous_custom_file_name = file_name
         values$file_name = file_name
         values$status_code = status_code   
         
+        # browser()
         removeModal(session = session)
     })
     
-    observe({
+    observe({        
         if (!docker){
-            values$file_name = MapExampleToImage(input$dropdown_input)
+            values$file_name = MapExampleToImage(input$dropdown_input)$selected
         }
         
         if (input$radio_input_selection == "example"){
-            values$file_name = MapExampleToImage(input$dropdown_input)
+            values$file_name = MapExampleToImage(input$dropdown_input)$selected
         } else {
             previous = values$previous_custom_file_name
             if (!is.null(previous)){
@@ -79,8 +82,9 @@ shinyServer(function(input, output, session) {
             # browser()
             file_name = paste0("lapsrn_x8_", values$file_name)
             folder_path = values$folder_path
-            after_path = file.path("img", folder_path, file_name, "hr.jpg")
             before_path = file.path("img", folder_path, file_name, "lr.jpg")
+            bicubic_path = file.path("img", folder_path, file_name, "hr_bicubic.jpg")
+            after_path = file.path("img", folder_path, file_name, "hr.jpg")
             
             if (!docker){
                 if (input$radio_input_selection == "custom") {
@@ -91,10 +95,11 @@ shinyServer(function(input, output, session) {
             }
             
             # browser()
-            shinyjs::js$insertImage(before_path, after_path)
+            shinyjs::js$insertImage(before_path, before_path, after_path)
             # browser()
             shinyjs::js$imageZoom("myimage", "myresult")
             shinyjs::js$imageZoom("myimage2", "myresult2")
+            shinyjs::js$imageZoom("myimage3", "myresult3")
         }
     })
     
@@ -122,7 +127,7 @@ shinyServer(function(input, output, session) {
             if (ratio > 1.5){
                 ui_width = 600
             } else {
-                ui_width = 300
+                ui_width = 500
             }     
             ui_height = ui_width/ratio
             
@@ -132,23 +137,21 @@ shinyServer(function(input, output, session) {
             
             tagList(
                 fluidRow(
-                    column(width = 6,
-                           tags$p("Before!", class = "compare_text",
-                                  style = "float:left;")),
-                    column(width = 6,
-                           tags$p("After!", class = "compare_text",
-                                  style = "float:right;")),
-                    tags$div(style = "text-align:center;display:flex;align-items:center;justify-content:center",
-                             tags$div(id = "comparison",
-                                      style = paste0("width:", ui_width, "px; height:", ui_height, "px;"),
-                                      tags$figure(
-                                          style = paste0("background-image: url(./", after_path, ");"),
-                                          tags$div(id = "divisor",
-                                                   style = paste0("background-image: url(./", before_path, ");"))
-                                      ),
-                                      tags$input(type = "range", min = 0, max = 100,
-                                                 value = 50, id = "slider", oninput = "moveDivisor()")
-                             )
+                    column(width = 12,
+                           tags$div("Original(Left) vs. Super Resolution (Right)", 
+                                    style = "width: 100%;text-align:center;"),
+                           tags$div(style = "text-align:center;display:flex;align-items:center;justify-content:center",
+                                    tags$div(id = "comparison",
+                                             style = paste0("width:", ui_width, "px; height:", ui_height, "px;"),
+                                             tags$figure(
+                                                 style = paste0("background-image: url(./", after_path, ");"),
+                                                 tags$div(id = "divisor",
+                                                          style = paste0("background-image: url(./", before_path, ");"))
+                                             ),
+                                             tags$input(type = "range", min = 0, max = 100,
+                                                        value = 50, id = "slider", oninput = "moveDivisor()")
+                                    )
+                           )
                     )
                 )
             )
@@ -167,12 +170,16 @@ shinyServer(function(input, output, session) {
     })
     output$download <- downloadHandler(
         filename = function(){
-            paste0(values$file_name,".zip")
+            paste0("lapsrn_x8_", values$file_name,".zip")
         },
         content = function(file){
-            folder_path = values$folder_path 
-            owd <- setwd(file.path(getwd(), "www/img", folder_path, values$file_name))
-            on.exit(setwd(owd))
+            file_name = paste0("lapsrn_x8_", values$file_name)
+            folder_path = values$folder_path
+            path = file.path(getwd(), "www/img", folder_path, file_name)
+            print(path)
+            temp = setwd(path)
+            # temp <- setwd(tempdir())
+            on.exit(setwd(temp))
             zip(file, list.files())
         }
     )

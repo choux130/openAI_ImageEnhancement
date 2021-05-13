@@ -11,8 +11,8 @@ services:
       - 8050
     # ports:
     #   - "8050:8050"
-    # volumes:
-    #     - ./output:/api/app/output
+    volumes:
+        - ./output:/api/app/output
 
   ui:
     build: 
@@ -26,5 +26,5 @@ services:
       - "80:80"
     depends_on: 
       - api
-    # volumes:
-    #   - ./output:/app/www/img/output
+    volumes:
+      - ./output:/app/www/img/output

@@ -4,6 +4,8 @@
 .Rhistory
 test_app.R
 dashboard/api/app/output/*
-output/*
+dashboard/api/app/BasicSR/*
+dashboard/api/app/SuperResolution_opencv/*
+dashboard/output/*
 dashboard/ui/app/www/img/output/*
-
+dashboard/ui/app/www/img/experiments/*

@@ -18,12 +18,18 @@ reticulate::source_python(path_python_files)
 docker = TRUE
 
 MapExampleToImage = function(example_name){
-   list = list("Example 1" = "monkey.jpg", 
-               "Example 2" = "shoe.png", 
-               "Example 3" = "text.png", 
-               "Example 4" = "baby.png")
+  list = list("Baboon (123x120)" = "baboon.png", 
+              "Sandals (350x124)" = "shoe.png", 
+              "Text (244x200)" = "text.png", 
+              "Baby (128x128)" = "baby.png") 
+  
+   if (is.null(example_name)){
+     selected = NULL
+   } else {
+     selected = list[list == example_name][[1]]
+   }
    
-   return(list[[example_name]])
+   return(list(selected = selected, all_selections = list))
 }
 
 js <- HTML('
@@ -40,11 +46,12 @@ function moveDivisor() {
 jsCode <- "shinyjs.insertImage = function(params){
   var src_path_1 = params[0]
   var src_path_2 = params[1]
+  var src_path_3 = params[2]
   
   console.log('start_to_change_image');
   $('#myimage').attr('src', src_path_1);
   $('#myimage2').attr('src', src_path_2);
-  console.log('end_to_change_image');
+  $('#myimage3').attr('src', src_path_3);
 }"
 
 jsCode2 <- 

@@ -58,10 +58,10 @@ shinyUI(
                                        width = "100%",
                                        inputId = "dropdown_input",
                                        label = "Select an example image:",
-                                       choices = c("Example 1",
-                                                   "Example 2",
-                                                   "Example 3",
-                                                   "Example 4")
+                                       choices = list("Baboon (123x120)" = "baboon.png", 
+                                                      "Sandals (350x124)" = "shoe.png", 
+                                                      "Text (244x200)" = "text.png", 
+                                                      "Baby (128x128)" = "baby.png") 
                                    )
                                ),
                                conditionalPanel(
@@ -88,12 +88,14 @@ shinyUI(
                         bs4Card(
                             width = 12,
                             title = "Zoom",
+                            collapsible = FALSE,
                             closable = FALSE, 
                             maximizable = TRUE,
                             status = "primary",
                             fluidRow(
-                               column(width = 6,
+                               column(width = 4,
                                       fluidRow(
+                                          tags$div("Original", style = "width: 300px;"),
                                           tags$div(
                                               class = "img-zoom-container",
                                               tags$img(
@@ -106,15 +108,31 @@ shinyUI(
                                           )
                                       )
                                ),
-                               column(width = 6,
+                               column(width = 4,
                                       fluidRow(
+                                          tags$div("Browser Scaling", style = "width: 300px;"),
+                                          tags$div(
+                                              class = "img-zoom-container-auto",
+                                              tags$img(
+                                                  id = "myimage2",
+                                                  width = 300
+                                              )),
+                                          tags$div(
+                                              id = "myresult2",
+                                              class = "img-zoom-result-auto"
+                                          )
+                                      )
+                               ),
+                               column(width = 4,
+                                      fluidRow(
+                                          tags$div("Super Resolution", style = "width: 300px;"),
                                           tags$div(
                                               class = "img-zoom-container",
                                               tags$img(
-                                                  id = "myimage2",
+                                                  id = "myimage3",
                                                   width = 300)),
                                           tags$div(
-                                              id = "myresult2",
+                                              id = "myresult3",
                                               class = "img-zoom-result"
                                           )
                                       )

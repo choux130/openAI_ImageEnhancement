@@ -6,6 +6,6 @@ def run_api(url, file_path, file_name):
   header = {'file_name': file_name}
   r = requests.post(url, files=my_img, headers = header, timeout=1000)
 
-  return(r.status_code)
+  return([r.status_code, r.json()])
 
 
