@@ -8,17 +8,23 @@ suppressMessages(library(reticulate))
 suppressMessages(library(readbitmap))
 suppressMessages(library(jpeg))
 suppressMessages(library(png))
+# suppressMessages(library(future))
+# suppressMessages(library(promises))
+# library(future)
+# library(promises)
 
 path_python_files = "python/api_funs.py"
 reticulate::source_python(path_python_files)
 
 docker = TRUE
+# plan(multicore) 
 
 MapExampleToImage = function(example_name){
   list = list("Baboon (123x120)" = "baboon.png", 
-              "Sandals (350x124)" = "shoe.png", 
+              "CA Logo (431x164)" = "ca_logo.png", 
               "Text (244x200)" = "text.png", 
-              "Baby (128x128)" = "baby.png") 
+              "Baby (128x128)" = "baby.png",
+              "Sandals (350x124)" = "shoe.png") 
   
    if (is.null(example_name)){
      selected = NULL
@@ -74,11 +80,14 @@ jsCode <- "shinyjs.insertImage = function(params){
   var src_path_1 = params[0]
   var src_path_2 = params[1]
   var src_path_3 = params[2]
+  var image_height = params[3]
   
-  console.log('start_to_change_image');
   $('#myimage').attr('src', src_path_1);
+  $('#myimage').attr('height', image_height);
   $('#myimage2').attr('src', src_path_2);
+  $('#myimage2').attr('height', image_height);
   $('#myimage3').attr('src', src_path_3);
+  $('#myimage3').attr('height', image_height);
 }"
 
 jsCode2 <- 

@@ -3,25 +3,19 @@ shinyServer(function(input, output, session) {
         previous_custom_file_name = NULL,
         folder_path = NULL,
         status_code = NULL, 
-        image_finish_trigger = NULL
+        image_finish_trigger = NULL, 
+        image_height = NULL
     )
     
     observe({
         if (input$radio_input_selection == "example"){
             values$status_code = 200
+            values$folder_path = "output_example"
         } else {
+          values$folder_path = "output"
           if (is.null(input$myFile)){
               values$status_code = NULL
           }  
-        }
-    })
-    
-    observe({
-        if (input$radio_input_selection == "example"){
-            values$folder_path = "output_example"
-            values$status_code = 200
-        } else {
-            values$folder_path = "output"
         }
     })
 
@@ -77,14 +71,11 @@ shinyServer(function(input, output, session) {
             values$previous_custom_file_name = file_name
             values$file_name = file_name
             values$status_code = status_code   
+            values$image_height = height
             
             # browser()
             removeModal(session = session)
         }
-        
-        
-        
-        
     })
     
     observe({        
@@ -131,7 +122,27 @@ shinyServer(function(input, output, session) {
             }
             
             # browser()
-            shinyjs::js$insertImage(before_path, before_path, after_path)
+            if (input$radio_input_selection == "example"){
+                img <- tryCatch({
+                    readJPEG(file.path("www",before_path)) }, error = function(e){
+                        readPNG(file.path("www",before_path))
+                    }
+                )
+            } else {
+                img <- tryCatch({
+                    readJPEG(file.path("www",before_path)) }, error = function(e){
+                        readPNG(file.path("www",before_path))
+                    }
+                )
+            }
+            # browser()
+            dim = dim(img)
+            height = dim[1]
+            width = dim[2]
+            new_height = 300*height/width
+
+            # browser()
+            shinyjs::js$insertImage(before_path, before_path, after_path, new_height)
             # browser()
             shinyjs::js$imageZoom("myimage", "myresult")
             shinyjs::js$imageZoom("myimage2", "myresult2")
@@ -170,6 +181,7 @@ shinyServer(function(input, output, session) {
             after_path = file.path("img", folder_path, file_name, "hr.jpg")
             before_path = file.path("img", folder_path, file_name, "lr.jpg")
             values$image_finish_trigger = rnorm(1)
+            # browser()
             
             tagList(
                 fluidRow(

@@ -58,9 +58,10 @@ shinyUI(
                                        inputId = "dropdown_input",
                                        label = "Select an example image:",
                                        choices = list("Baboon (123x120)" = "baboon.png", 
-                                                      "Sandals (350x124)" = "shoe.png", 
+                                                      "CA Logo (431x164)" = "ca_logo.png", 
                                                       "Text (244x200)" = "text.png", 
-                                                      "Baby (128x128)" = "baby.png") 
+                                                      "Baby (128x128)" = "baby.png",
+                                                      "Sandals (350x124)" = "shoe.png") 
                                    )
                                ),
                                conditionalPanel(
