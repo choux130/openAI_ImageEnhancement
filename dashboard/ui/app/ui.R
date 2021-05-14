@@ -46,7 +46,7 @@ shinyUI(
                                radioButtons(
                                    inputId = "radio_input_selection",
                                    label = "Input image:",
-                                   choiceNames = c("Example", "Custom"),
+                                   choiceNames = c("Example", "Use your own"),
                                    choiceValues = c("example", "custom"),
                                    selected = "example",
                                    inline = TRUE
@@ -57,17 +57,18 @@ shinyUI(
                                        width = "100%",
                                        inputId = "dropdown_input",
                                        label = "Select an example image:",
-                                       choices = list("Baboon (123x120)" = "baboon.png", 
-                                                      "CA Logo (431x164)" = "ca_logo.png", 
+                                       choices = list("CA Logo (431x164)" = "ca_logo.png", 
+                                                      "Baboon (123x120)" = "baboon.png", 
                                                       "Text (244x200)" = "text.png", 
                                                       "Baby (128x128)" = "baby.png",
+                                                      "CD Player (351x292)" = "sony_cdplayer.jpg",
                                                       "Sandals (350x124)" = "shoe.png") 
                                    )
                                ),
                                conditionalPanel(
                                    condition = "input.radio_input_selection == 'custom'",
                                    fileInput2(inputId = "myFile",
-                                             label = "Choose a image:",
+                                             label = "Upload an image:",
                                              accept = c('image/png', 'image/jpeg'),
                                              labelIcon = "file-image-o", 
                                              progress = TRUE
