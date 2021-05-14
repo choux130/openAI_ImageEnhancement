@@ -60,9 +60,9 @@ shinyUI(
                                        choices = list("CA Logo (431x164)" = "ca_logo.png", 
                                                       "Baboon (123x120)" = "baboon.png", 
                                                       "Text (244x200)" = "text.png", 
-                                                      "Baby (128x128)" = "baby.png",
-                                                      "CD Player (351x292)" = "sony_cdplayer.jpg",
-                                                      "Sandals (350x124)" = "shoe.png") 
+                                                      "Sandals (350x124)" = "shoe.png",
+                                                      "Baby (128x128)" = "baby.png"
+                                                      ) 
                                    )
                                ),
                                conditionalPanel(
@@ -114,7 +114,7 @@ shinyUI(
                                ),
                                column(width = 4, id = "zoom_2",
                                       fluidRow(
-                                          tags$div("Browser Scaling", style = "width: 300px;"),
+                                          tags$div("Browser default interpolation", style = "width: 300px;"),
                                           tags$div(
                                               class = "img-zoom-container-auto",
                                               tags$img(

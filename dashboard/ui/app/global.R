@@ -18,9 +18,9 @@ MapExampleToImage = function(example_name){
   list = list("CA Logo (431x164)" = "ca_logo.png", 
               "Baboon (123x120)" = "baboon.png", 
               "Text (244x200)" = "text.png", 
-              "Baby (128x128)" = "baby.png",
-              "CD Player (351x292)" = "sony_cdplayer.jpg",
-              "Sandals (350x124)" = "shoe.png") 
+              "Sandals (350x124)" = "shoe.png",
+              "Baby (128x128)" = "baby.png"
+              ) 
   
    if (is.null(example_name)){
      selected = NULL

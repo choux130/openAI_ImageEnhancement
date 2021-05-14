@@ -73,6 +73,26 @@ shinyServer(function(input, output, session) {
             values$status_code = status_code   
             values$image_height = height
             
+            
+            folder_path = values$folder_path
+            file_name = paste0("lapsrn_x8_", values$file_name)
+            if (!docker){
+                # browser()
+                if (input$radio_input_selection == "custom") {
+                    dir.create(file.path('www/img', folder_path))
+                    R.utils::copyDirectory(file.path("../../api/app", folder_path, file_name), 
+                                           file.path('www/img', folder_path, file_name),
+                                           recursive=TRUE)
+                    file.copy(from = file_path,
+                              to   = file.path("www/img", folder_path, 
+                                               file_name, "lr.jpg"))
+                }
+            } else {
+                file.copy(from = file_path,
+                          to   = file.path("www/img", folder_path, 
+                                           file_name, "lr.jpg"))
+            }
+            
             # browser()
             removeModal(session = session)
         }
@@ -112,14 +132,6 @@ shinyServer(function(input, output, session) {
             before_path = file.path("img", folder_path, file_name, "lr.jpg")
             bicubic_path = file.path("img", folder_path, file_name, "hr_bicubic.jpg")
             after_path = file.path("img", folder_path, file_name, "hr.jpg")
-            
-            if (!docker){
-                if (input$radio_input_selection == "custom") {
-                    dir.create(file.path('www/img', folder_path))
-                    R.utils::copyDirectory(file.path("../../api/app", folder_path, file_name), 
-                                           file.path('www/img', folder_path, file_name), recursive=TRUE)
-                }
-            }
             
             # browser()
             if (input$radio_input_selection == "example"){

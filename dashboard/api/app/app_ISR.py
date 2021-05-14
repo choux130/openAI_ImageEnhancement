@@ -33,7 +33,7 @@ def super_resolution_esrgan():
         img2.paste(img, mask=img.split()[3]) # 3 is the alpha channel
     else: 
         img2 = img
-    img2.save(folder_path + '/' + 'lr.jpg')
+    # img2.save(folder_path + '/' + 'lr.jpg')
 
     # pdb.set_trace()
     # Inference
