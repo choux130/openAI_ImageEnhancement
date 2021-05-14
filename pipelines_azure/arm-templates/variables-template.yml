@@ -11,4 +11,4 @@ variables:
   - name: WEB_APP_TIER
     value: S3
   - name: AZURE_RM_SVC_CONNECTION
-    value: personal-050ca
+    value: personal-fda9d
