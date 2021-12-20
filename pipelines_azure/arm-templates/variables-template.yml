@@ -9,6 +9,6 @@ variables:
   - name: WEB_APP_NAME
     value: ImageEnhancement
   - name: WEB_APP_TIER
-    value: B3
+    value: B2
   - name: AZURE_RM_SVC_CONNECTION
     value: personal-fda9d
